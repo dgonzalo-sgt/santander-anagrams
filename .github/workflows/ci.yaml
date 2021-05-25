@@ -20,7 +20,7 @@ jobs:
       - name: build
         run: docker build --file ${file} --no-cache --tag ${registry}/${user}/${repository}:${tagname} .
       - name: run
-        run: docker run --detach --entrypoint phyton  --name ${repository} ${registry}/${user}/${repository}:${tagname} anagrams.py
+        run: docker run --detach --entrypoint python3  --name ${repository} ${registry}/${user}/${repository}:${tagname} anagrams.py
       - name: test
         run: while true ; do sleep ${sleep} ; docker logs ${repository} 2>& 1 | grep "${pattern}" && break ; done
         
