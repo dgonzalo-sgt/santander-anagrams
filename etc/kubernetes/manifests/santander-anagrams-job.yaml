@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dgb-santander-anagrams-job
+spec:
+  selector: {}
+  template:
+    metadata:
+      name: dgb-santander-anagrams-job
+    spec:
+      containers:
+        - name: dgb-python-anagrams-container
+          image: index.docker.io/dgonzalosgt/santander-anagrams:1.0.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - anagrams.py
+          command:
+            - python3
+          volumeMounts:
+            - mountPath: /data
+              name: dgb-santander-anagrams-volume-read
+              readOnly: true          
+      restartPolicy: Never
+      initContainers:
+        - args:
+            - https://github.com/dgonzalo-sgt/santander-anagrams/raw/docker/data/words.txt
+          command:
+            - wget
+          image: index.docker.io/alpine
+          name: dgb-python-anagrams-init-container
+          volumeMounts:
+            - mountPath: /data
+              name: dgb-santander-anagrams-volume-write
+              readOnly: false
