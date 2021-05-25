@@ -18,17 +18,22 @@ spec:
             - python3
           volumeMounts:
             - mountPath: /data
-              name: dgb-santander-anagrams-volume-read
+              name: dgb-santander-anagrams-volume
               readOnly: true          
+      volumes:
+      - name: dgb-santander-anagrams-volume
+        emptyDir: {}
       restartPolicy: Never
       initContainers:
         - args:
+            - "-O"
+            - "/data/words.txt"
             - https://github.com/dgonzalo-sgt/santander-anagrams/raw/docker/data/words.txt
           command:
             - wget
-          image: index.docker.io/alpine
+          image: index.docker.io/busybox
           name: dgb-python-anagrams-init-container
           volumeMounts:
             - mountPath: /data
-              name: dgb-santander-anagrams-volume-write
+              name: dgb-santander-anagrams-volume
               readOnly: false
